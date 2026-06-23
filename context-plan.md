@@ -31,7 +31,7 @@ Abaixo vamos listar os nomes dos componentes onde praticamente será repetido no
 
 - Header : Composto por Logotipo, menu do topo, barra de busca, botão solicite um orçamento. (Será exibido em todas páginas do projeto.)
 
-- Footer : O componente é composto por logotipo, barra de navegação de redes sociais, Barra de Menu com 3 colunas, 
+- Footer : O componente é composto por logotipo, barra de navegação de redes sociais, Barra de Menu com 3 colunas, formulário com campo de input email para cadastrado de newsletter. 
 
 # Seções das Páginas
 Vamos detalhar abaixo as seções de cada página
