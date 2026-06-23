@@ -31,7 +31,19 @@ Abaixo vamos listar os nomes dos componentes onde praticamente será repetido no
 
 - Header : Composto por Logotipo, menu do topo, barra de busca, botão solicite um orçamento. (Será exibido em todas páginas do projeto.)
 
-- Footer : O componente é composto por logotipo, barra de navegação de redes sociais, Barra de Menu com 3 colunas, formulário com campo de input email para cadastrado de newsletter. 
+- Footer : O componente é composto por logotipo, barra de navegação de redes sociais, Barra de Menu com 3 colunas, formulário com campo de input email para cadastrado de newsletter.
+
+- Section Map: Teremos de background da seção um google maps, no canto esquerdo na parte superior um box com o logotipo e o Texto Sigma Edge | Matriz São Bernado.
+
+No lado direito teremos um formulário de contato com:
+h3 {Fale com a gente}
+p {}
+Input para Nome
+Input para email
+Input para Celular
+Input para Assunto
+Input Textarea para mensagem
+Botão solicitar contato
 
 # Seções das Páginas
 Vamos detalhar abaixo as seções de cada página
