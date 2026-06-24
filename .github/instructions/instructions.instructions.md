@@ -10,5 +10,6 @@ Provide project context and coding guidelines that AI should follow when generat
 - BrandBlue = #026cbb
 - ArrowBlue = #3285b8
 - DarkBlue = #062268
-- HeadingColors = #072354;
+- HeadingColors = #072354
 - BodyText = #3d3d3d
+- backgroundGray = #727272
