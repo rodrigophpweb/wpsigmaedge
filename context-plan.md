@@ -29,7 +29,7 @@ O site vai compor as seguintes páginas:
 - Single dos Serviços
 ---
 
-## Componentes do Projeto.
+## Componentes repetidos do Projeto.
 Abaixo vamos listar os nomes dos componentes onde praticamente será repetido no projeto.
 
 - Header : Composto por Logotipo, menu do topo, barra de busca, botão solicite um orçamento. (Será exibido em todas páginas do projeto.)
@@ -51,6 +51,36 @@ Abaixo vamos listar os nomes dos componentes onde praticamente será repetido no
   - h3 {Título do Post}
   - p {Trazer o resumo do the_contetn()}
   - a {Link para o post com o texto saiba mais}
+
+- Section catálogo de produtos (Essa seção vai retornar no formato de um carrousel 4 posts do tipo produto com as seguintes informações):
+  - h2 {Conheça nosso catálogo de produtos}
+  - article
+    - figure
+      - Imagem
+    - header
+      - Tag {Em destaque}
+      - h3 {Título}
+    - footer
+      - Link com o texto {Cotar} ele vai abrir uma aba para o whatsapp com as informações do card
+
+
+## Componentes não repetidos do Projeto.
+- Sidebar para a página de produtos na lateral esquerda que será responsáivel por filtrar os produtos do catálogo. Ele será composto por um accordion:
+- Característica 1
+  - Detalhe 1
+  - Detalhe 2
+  - Detalhe 3
+
+- Característica 2
+  - Detalhe 1
+  - Detalhe 2
+  - Detalhe 3
+
+- Característica 3
+  - Detalhe 1
+  - Detalhe 2
+  - Detalhe 3
+
 
 ## Seções das Páginas
 Vamos detalhar abaixo as seções de cada página
