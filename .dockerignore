@@ -1,0 +1,27 @@
+# Arquivos do Git
+.git
+.gitignore
+.github
+
+# Arquivos do sistema
+.DS_Store
+Thumbs.db
+*.log
+
+# Node modules (se houver)
+node_modules
+npm-debug.log
+
+# Arquivos temporários
+*.tmp
+*.temp
+*.swp
+*.swo
+
+# Documentação
+README.md
+*.md
+
+# Docker
+docker-compose.yml
+.dockerignore

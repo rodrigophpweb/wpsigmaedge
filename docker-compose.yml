@@ -1,0 +1,74 @@
+version: '3.8'
+
+services:
+  # WordPress
+  wordpress:
+    image: wordpress:latest
+    container_name: sigma_edge_wordpress
+    restart: always
+    ports:
+      - "8088:80"
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_NAME: sigma_edge_db
+      WORDPRESS_DB_USER: sigma_edge_user
+      WORDPRESS_DB_PASSWORD: sigma_edge_pass
+      WORDPRESS_DEBUG: 1
+      WORDPRESS_CONFIG_EXTRA: |
+        define('WP_DEBUG_LOG', true);
+        define('WP_DEBUG_DISPLAY', false);
+        define('SCRIPT_DEBUG', true);
+    volumes:
+      # Mapeia o tema atual para dentro do WordPress
+      - ./:/var/www/html/wp-content/themes/wpsigmaedge
+      # Persiste uploads e plugins
+      - wordpress_data:/var/www/html
+      # Configuração PHP customizada
+      - ./php-config.ini:/usr/local/etc/php/conf.d/uploads.ini
+    depends_on:
+      - db
+    networks:
+      - sigma_edge_network
+
+  # MySQL Database
+  db:
+    image: mysql:8.0
+    container_name: sigma_edge_db
+    restart: always
+    environment:
+      MYSQL_DATABASE: sigma_edge_db
+      MYSQL_USER: sigma_edge_user
+      MYSQL_PASSWORD: sigma_edge_pass
+      MYSQL_ROOT_PASSWORD: root_password
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - sigma_edge_network
+    command: --default-authentication-plugin=mysql_native_password
+
+  # PHPMyAdmin
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: sigma_edge_phpmyadmin
+    restart: always
+    ports:
+      - "8087:80"
+    environment:
+      PMA_HOST: db
+      PMA_PORT: 3306
+      MYSQL_ROOT_PASSWORD: root_password
+    depends_on:
+      - db
+    networks:
+      - sigma_edge_network
+
+volumes:
+  wordpress_data:
+    name: sigma_edge_wordpress_data
+  db_data:
+    name: sigma_edge_db_data
+
+networks:
+  sigma_edge_network:
+    name: sigma_edge_network
+    driver: bridge

@@ -1,0 +1,223 @@
+/**
+ * Section Services
+ * CSS Grid + CSS Nesting + Container Query
+ */
+
+.section-services {
+    container-type: inline-size;
+    container-name: services;
+    
+    padding-block: var(--space-section, 5rem);
+    padding-inline: var(--space-gutter, 1.5rem);
+    background-color: hsl(0 0% 100%);
+
+    &__title {
+        font-size: clamp(1.5rem, 3vw + 1rem, 2rem);
+        font-weight: 700;
+        line-height: 1.3;
+        color: hsl(206 100% 21%);
+        text-align: center;
+        margin-block-end: 3rem;
+    }
+
+    &__tabs {
+        display: grid;
+        place-items: center;
+        margin-block-end: 3rem;
+
+        & ul {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        & button {
+            padding-block: 0.75rem;
+            padding-inline: 1.5rem;
+            background-color: transparent;
+            color: hsl(220 11% 29%);
+            font-weight: 600;
+            border: 2px solid hsl(218 26% 89%);
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: 
+                background-color 0.3s,
+                color 0.3s,
+                border-color 0.3s;
+
+            &[aria-selected="true"] {
+                background-color: hsl(206 100% 29%);
+                color: hsl(0 0% 100%);
+                border-color: hsl(206 100% 29%);
+            }
+
+            &:hover,
+            &:focus-visible {
+                border-color: hsl(206 100% 29%);
+                color: hsl(206 100% 29%);
+            }
+
+            &:focus-visible {
+                outline: 2px solid currentColor;
+                outline-offset: 2px;
+            }
+        }
+    }
+
+    &__grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
+        gap: 2rem;
+
+        &[hidden] {
+            display: none;
+        }
+    }
+}
+
+/* Service Card */
+.service-card {
+    container-type: inline-size;
+    container-name: card;
+    
+    display: grid;
+    grid-template-rows: auto 1fr;
+    background-color: hsl(0 0% 100%);
+    border: 1px solid hsl(218 26% 89%);
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    transition: 
+        translate 0.3s,
+        box-shadow 0.3s,
+        border-color 0.3s;
+    position: relative;
+
+    &::after {
+        content: '››';
+        position: absolute;
+        inset-block-start: 1rem;
+        inset-inline-end: 1rem;
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: hsl(218 26% 89%);
+        opacity: 0.3;
+    }
+
+    &:hover,
+    &:focus-within {
+        translate: 0 -0.25rem;
+        box-shadow: 0 0.625rem 1.875rem hsl(215 100% 12% / 0.08);
+        border-color: hsl(206 100% 29%);
+    }
+
+    &__header {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+        margin-block-end: 1.5rem;
+    }
+
+    &__image {
+        inline-size: 5rem;
+        block-size: 5rem;
+        background-color: hsl(218 32% 94%);
+        border-radius: 0.5rem;
+        overflow: clip;
+        margin: 0;
+
+        & img {
+            inline-size: 100%;
+            block-size: 100%;
+            object-fit: cover;
+        }
+    }
+
+    &__title {
+        font-size: clamp(1.125rem, 1vw + 1rem, 1.25rem);
+        font-weight: 700;
+        line-height: 1.4;
+        margin: 0;
+
+        & a {
+            color: hsl(206 100% 21%);
+            text-decoration: none;
+
+            &:hover,
+            &:focus-visible {
+                text-decoration: underline;
+                text-decoration-thickness: 2px;
+                text-underline-offset: 0.25rem;
+            }
+        }
+    }
+
+    &__footer {
+        display: flex;
+        flex-direction: column;
+        gap: 1.25rem;
+        margin-block-start: auto;
+
+        & p {
+            font-size: 0.875rem;
+            line-height: 1.6;
+            color: hsl(220 11% 29%);
+            margin: 0;
+        }
+    }
+
+    &__link {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.25rem;
+        color: hsl(206 100% 29%);
+        font-size: 0.875rem;
+        font-weight: 700;
+        text-decoration: none;
+        transition: gap 0.3s;
+
+        &:hover,
+        &:focus-visible {
+            gap: 0.5rem;
+            color: hsl(206 100% 21%);
+        }
+
+        &:focus-visible {
+            outline: 2px solid currentColor;
+            outline-offset: 2px;
+            border-radius: 0.25rem;
+        }
+    }
+}
+
+/* Container Query */
+@container services (inline-size < 48rem) {
+    .section-services {
+        padding-block: 2.5rem;
+
+        &__title {
+            margin-block-end: 2rem;
+        }
+
+        &__tabs {
+            margin-block-end: 2rem;
+
+            & ul {
+                flex-direction: column;
+                inline-size: 100%;
+            }
+
+            & button {
+                inline-size: 100%;
+            }
+        }
+
+        &__grid {
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+    }
+}

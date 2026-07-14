@@ -1,0 +1,209 @@
+/**
+ * Section Address - Mapa + Formulário
+ * Layout: Grid split (mapa + formulário)
+ * Responsiveness: Container Query
+ */
+
+.section-address {
+    container: section-address / inline-size;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-block-size: 600px;
+    
+    & > * {
+        container: address-item / inline-size;
+    }
+}
+
+/* Container Query - Mobile Stack */
+@container section-address (inline-size < 64rem) {
+    .section-address {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Mapa */
+.section-address__map {
+    display: grid;
+    place-items: center;
+    background-color: hsl(215 30% 95%);
+    overflow: hidden;
+    
+    & iframe {
+        inline-size: 100%;
+        block-size: 100%;
+        min-block-size: 450px;
+        border: 0;
+    }
+}
+
+/* Conteúdo do Formulário */
+.section-address__content {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    padding-block: 3rem;
+    padding-inline: 2rem;
+    background-color: hsl(0 0% 100%);
+}
+
+@container address-item (inline-size < 36rem) {
+    .section-address__content {
+        padding-inline: 1.5rem;
+        padding-block: 2rem;
+    }
+}
+
+/* Header com ícone */
+.section-address__header {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+}
+
+.section-address__icon {
+    flex-shrink: 0;
+    inline-size: 3rem;
+    block-size: 3rem;
+    color: hsl(207 100% 21%);
+    
+    & svg {
+        inline-size: 100%;
+        block-size: 100%;
+    }
+}
+
+.section-address__heading {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.section-address__title {
+    font-family: 'Hanken Grotesk', system-ui, sans-serif;
+    font-size: clamp(1.5rem, 2vw + 1rem, 2rem);
+    font-weight: 700;
+    line-height: 1.2;
+    color: hsl(215 100% 12%);
+    margin: 0;
+}
+
+.section-address__subtitle {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: hsl(207 100% 28%);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* Info */
+.section-address__info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    
+    & h3 {
+        font-family: 'Hanken Grotesk', system-ui, sans-serif;
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: hsl(215 100% 12%);
+        margin: 0;
+    }
+    
+    & p {
+        font-size: 0.9375rem;
+        line-height: 1.6;
+        color: hsl(215 15% 35%);
+        margin: 0;
+    }
+}
+
+/* Contact Form */
+.contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.contact-form__group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    
+    & label {
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: hsl(215 100% 12%);
+    }
+    
+    & input,
+    & textarea {
+        inline-size: 100%;
+        padding-block: 0.75rem;
+        padding-inline: 1rem;
+        font-family: inherit;
+        font-size: 0.9375rem;
+        line-height: 1.5;
+        color: hsl(215 100% 12%);
+        background-color: hsl(215 30% 98%);
+        border: 1px solid hsl(215 20% 85%);
+        border-radius: 0.5rem;
+        transition: all 0.2s ease;
+        
+        &::placeholder {
+            color: hsl(215 10% 60%);
+        }
+        
+        &:focus {
+            outline: 2px solid hsl(207 100% 28%);
+            outline-offset: 2px;
+            border-color: hsl(207 100% 28%);
+            background-color: hsl(0 0% 100%);
+        }
+        
+        &:invalid {
+            border-color: hsl(0 65% 51%);
+        }
+    }
+    
+    & textarea {
+        resize: vertical;
+        min-block-size: 8rem;
+    }
+}
+
+.contact-form__submit {
+    inline-size: 100%;
+    padding-block: 0.875rem;
+    padding-inline: 2rem;
+    font-family: 'Hanken Grotesk', system-ui, sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: hsl(0 0% 100%);
+    background-color: hsl(207 100% 28%);
+    border: 0;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    
+    &:hover {
+        background-color: hsl(207 100% 21%);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px hsl(207 100% 28% / 0.3);
+    }
+    
+    &:active {
+        transform: translateY(0);
+    }
+    
+    &:focus-visible {
+        outline: 2px solid hsl(207 100% 28%);
+        outline-offset: 2px;
+    }
+}
+
+@container address-item (inline-size < 36rem) {
+    .contact-form__submit {
+        font-size: 0.9375rem;
+    }
+}
