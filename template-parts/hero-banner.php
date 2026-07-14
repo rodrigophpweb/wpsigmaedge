@@ -1,42 +1,41 @@
 <?php
 /**
- * Hero Banner - ACF
- * Fields: hero_eyebrow, hero_title, hero_description, hero_cta_text, hero_cta_link, hero_background_image
+ * Hero Banner
  */
+
+$hero = sigma_edge_get_hero_data();
 ?>
 <section class="hero-banner">
-    <?php if (get_field('hero_background_image')) : ?>
+    <?php if ($hero['background']) : ?>
         <picture class="hero-banner__background">
-            <?php 
-            $image = get_field('hero_background_image');
-            echo wp_get_attachment_image($image['id'], 'hero-banner', false, [
+            <?php
+            echo wp_get_attachment_image($hero['background'], 'hero-banner', false, [
                 'loading' => 'eager',
-                'fetchpriority' => 'high'
+                'fetchpriority' => 'high',
+                'alt' => '',
             ]);
             ?>
         </picture>
     <?php endif; ?>
 
     <div class="hero-banner__content">
-        <?php if (get_field('hero_eyebrow')) : ?>
-            <span class="hero-banner__eyebrow"><?php the_field('hero_eyebrow'); ?></span>
+        <?php if ($hero['eyebrow']) : ?>
+            <span class="hero-banner__eyebrow"><?php echo esc_html($hero['eyebrow']); ?></span>
         <?php endif; ?>
 
-        <?php if (get_field('hero_title')) : ?>
-            <h1 class="hero-banner__title"><?php the_field('hero_title'); ?></h1>
+        <?php if ($hero['title']) : ?>
+            <h1 class="hero-banner__title"><?php echo esc_html($hero['title']); ?></h1>
         <?php endif; ?>
 
-        <?php if (get_field('hero_description')) : ?>
-            <p class="hero-banner__description"><?php the_field('hero_description'); ?></p>
+        <?php if ($hero['description']) : ?>
+            <p class="hero-banner__description"><?php echo esc_html($hero['description']); ?></p>
         <?php endif; ?>
 
-        <?php if (get_field('hero_cta_link')) : 
-            $cta_link = get_field('hero_cta_link');
-            $cta_text = get_field('hero_cta_text') ?: 'Saiba mais';
-        ?>
-            <a href="<?php echo esc_url($cta_link); ?>" class="hero-banner__cta">
-                <?php echo esc_html($cta_text); ?>
-                <span aria-hidden="true">››››››</span>
+        <span class="hero-banner__chevrons" aria-hidden="true">››››››››</span>
+
+        <?php if ($hero['cta_link']) : ?>
+            <a href="<?php echo esc_url($hero['cta_link']); ?>" class="hero-banner__cta">
+                <?php echo esc_html($hero['cta_text']); ?>
             </a>
         <?php endif; ?>
     </div>

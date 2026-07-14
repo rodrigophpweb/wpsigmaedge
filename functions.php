@@ -17,6 +17,9 @@ require_once get_template_directory() . '/inc/customize.php';
 // Meta Boxes
 require_once get_template_directory() . '/inc/meta-boxes.php';
 
+// Template Data Helpers (arquitetura limpa: ACF/WP_Query fora dos template-parts)
+require_once get_template_directory() . '/inc/template-data.php';
+
 // ============================================
 // CUSTOM SEARCH FORM
 // ============================================
@@ -27,7 +30,7 @@ function sigma_edge_search_form($form) {
         <div class="search-form__wrapper">
             <input type="search" 
                    class="search-form__input" 
-                   placeholder="Buscar..." 
+                   placeholder="Como podemos te ajudar?"
                    value="' . get_search_query() . '" 
                    name="s" 
                    required />

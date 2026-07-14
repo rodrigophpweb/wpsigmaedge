@@ -83,47 +83,33 @@
 .service-card {
     container-type: inline-size;
     container-name: card;
-    
-    display: grid;
-    grid-template-rows: auto 1fr;
-    background-color: hsl(0 0% 100%);
-    border: 1px solid hsl(218 26% 89%);
-    border-radius: 0.5rem;
-    padding: 1.5rem;
-    transition: 
-        translate 0.3s,
-        box-shadow 0.3s,
-        border-color 0.3s;
-    position: relative;
 
-    &::after {
-        content: '››';
-        position: absolute;
-        inset-block-start: 1rem;
-        inset-inline-end: 1rem;
-        font-size: 1.5rem;
-        font-weight: 700;
-        color: hsl(218 26% 89%);
-        opacity: 0.3;
-    }
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    background-color: hsl(0 0% 100%);
+    border-radius: 0.5rem;
+    overflow: clip;
+    transition:
+        translate 0.3s,
+        box-shadow 0.3s;
+    position: relative;
 
     &:hover,
     &:focus-within {
         translate: 0 -0.25rem;
-        box-shadow: 0 0.625rem 1.875rem hsl(215 100% 12% / 0.08);
-        border-color: hsl(206 100% 29%);
+        box-shadow: 0 0.625rem 1.875rem hsl(215 100% 12% / 0.15);
     }
 
     &__header {
         display: flex;
         flex-direction: column;
-        gap: 1.5rem;
-        margin-block-end: 1.5rem;
+        gap: 1rem;
+        padding: 1.5rem 1.5rem 0;
     }
 
     &__image {
-        inline-size: 5rem;
-        block-size: 5rem;
+        inline-size: 100%;
+        block-size: 10rem;
         background-color: hsl(218 32% 94%);
         border-radius: 0.5rem;
         overflow: clip;
@@ -140,6 +126,8 @@
         font-size: clamp(1.125rem, 1vw + 1rem, 1.25rem);
         font-weight: 700;
         line-height: 1.4;
+        padding-inline: 1.5rem;
+        padding-block-start: 1rem;
         margin: 0;
 
         & a {
@@ -158,37 +146,43 @@
     &__footer {
         display: flex;
         flex-direction: column;
-        gap: 1.25rem;
-        margin-block-start: auto;
+        gap: 1rem;
+        margin-block-start: 1.5rem;
+        padding: 1.5rem;
+        background-color: hsl(207 100% 28%);
 
         & p {
             font-size: 0.875rem;
             line-height: 1.6;
-            color: hsl(220 11% 29%);
+            color: hsl(0 0% 100% / 0.9);
             margin: 0;
         }
     }
 
     &__link {
+        align-self: flex-start;
         display: inline-flex;
         align-items: center;
-        gap: 0.25rem;
-        color: hsl(206 100% 29%);
+        gap: 0.375rem;
+        padding-block: 0.625rem;
+        padding-inline: 1.25rem;
+        background-color: hsl(0 0% 100%);
+        color: hsl(206 100% 21%);
         font-size: 0.875rem;
         font-weight: 700;
         text-decoration: none;
-        transition: gap 0.3s;
+        border-radius: 0.5rem;
+        transition: gap 0.3s, background-color 0.3s;
 
         &:hover,
         &:focus-visible {
             gap: 0.5rem;
-            color: hsl(206 100% 21%);
+            background-color: hsl(215 30% 95%);
         }
 
         &:focus-visible {
-            outline: 2px solid currentColor;
+            outline: 2px solid hsl(0 0% 100%);
             outline-offset: 2px;
-            border-radius: 0.25rem;
         }
     }
 }

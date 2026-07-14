@@ -10,6 +10,55 @@ if (!defined('ABSPATH')) {
 }
 
 /**
+ * Habilitar upload de SVG (logo do tema)
+ *
+ * O WordPress bloqueia SVG por padrão (mime type não permitido) e, mesmo quando
+ * permitido, o wp_check_filetype_and_ext() ainda rejeita o arquivo porque o
+ * detector de mime real não reconhece XML como image/svg+xml — daí o erro
+ * "Este arquivo não pode ser processado pelo servidor web". As duas funções
+ * abaixo resolvem isso. Restrito a quem pode gerenciar o site (administradores),
+ * já que SVG pode conter <script> e é um vetor de XSS se qualquer usuário puder subir.
+ */
+function sigma_edge_enable_svg_upload($mimes) {
+    if (current_user_can('manage_options')) {
+        $mimes['svg'] = 'image/svg+xml';
+    }
+
+    return $mimes;
+}
+add_filter('upload_mimes', 'sigma_edge_enable_svg_upload');
+
+function sigma_edge_fix_svg_mime_type($data, $file, $filename, $mimes) {
+    if (!$data['type']) {
+        $filetype = wp_check_filetype($filename, $mimes);
+
+        if ($filetype['ext'] === 'svg') {
+            $data['ext']             = 'svg';
+            $data['type']            = 'image/svg+xml';
+            $data['proper_filename'] = $filename;
+        }
+    }
+
+    return $data;
+}
+add_filter('wp_check_filetype_and_ext', 'sigma_edge_fix_svg_mime_type', 10, 4);
+
+/**
+ * Exibir o SVG corretamente na grade da Biblioteca de Mídia
+ * (sem isso, o WordPress não sabe gerar miniatura e mostra um ícone quebrado)
+ */
+function sigma_edge_svg_media_grid_style() {
+    echo '<style>
+        .attachment-266x266.type-image img[src$=".svg"],
+        .media-icon img[src$=".svg"] {
+            width: 100% !important;
+            height: auto !important;
+        }
+    </style>';
+}
+add_action('admin_head', 'sigma_edge_svg_media_grid_style');
+
+/**
  * Register ACF Options Pages
  */
 function sigma_edge_register_options_pages() {
@@ -75,6 +124,14 @@ function sigma_edge_theme_support() {
 
     // Enable support for Post Thumbnails
     add_theme_support('post-thumbnails');
+
+    // Logo customizável (Aparência > Personalizar > Identidade do site)
+    add_theme_support('custom-logo', [
+        'height'      => 60,
+        'width'       => 200,
+        'flex-height' => true,
+        'flex-width'  => true,
+    ]);
 
     // Set post thumbnail size
     set_post_thumbnail_size(1200, 675, true);
@@ -238,11 +295,11 @@ function sigma_edge_handle_contact_submit() {
 
     // Sanitize inputs
     $name    = sanitize_text_field($_POST['contact_name'] ?? '');
-    $email   = sanitize_email($_POST['contact_email'] ?? '');
+    $subject_field = sanitize_text_field($_POST['contact_subject'] ?? '');
     $phone   = sanitize_text_field($_POST['contact_phone'] ?? '');
     $message = sanitize_textarea_field($_POST['contact_message'] ?? '');
 
-    if (empty($name) || !is_email($email) || empty($message)) {
+    if (empty($name) || empty($phone) || empty($message)) {
         wp_redirect(add_query_arg('contact', 'error', wp_get_referer()));
         exit;
     }
@@ -251,13 +308,13 @@ function sigma_edge_handle_contact_submit() {
     $to      = get_option('admin_email');
     $subject = sprintf(__('[%s] Nova mensagem de contato', 'wpsigmaedge'), get_bloginfo('name'));
     $body    = sprintf(
-        __("Nome: %s\nE-mail: %s\nTelefone: %s\n\nMensagem:\n%s", 'wpsigmaedge'),
+        __("Nome: %s\nAssunto: %s\nTelefone: %s\n\nMensagem:\n%s", 'wpsigmaedge'),
         $name,
-        $email,
+        $subject_field ?: '-',
         $phone,
         $message
     );
-    $headers = ['Content-Type: text/plain; charset=UTF-8', "Reply-To: {$email}"];
+    $headers = ['Content-Type: text/plain; charset=UTF-8'];
 
     wp_mail($to, $subject, $body, $headers);
 
