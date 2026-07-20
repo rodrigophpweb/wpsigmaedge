@@ -8,44 +8,21 @@ get_header(); ?>
 
 <main class="front-page" role="main">
     
-    <?php 
-    // Hero Banner
-    get_template_part('template-parts/hero-banner'); 
-    ?>
+    <?php
+        $sections = [
+            'template-parts/hero-banner',
+            'template-parts/section-differences',
+            'template-parts/section-services',
+            'template-parts/section-product-catalog',
+            'template-parts/section-post-blog',
+            'template-parts/section-differences-two',
+            'template-parts/section-address',
+            'template-parts/button-whatsapp',
+        ];
 
-    <?php 
-    // Diferenciais Cards
-    get_template_part('template-parts/section-differences'); 
-    ?>
-
-    <?php 
-    // Serviços
-    get_template_part('template-parts/section-services'); 
-    ?>
-
-    <?php 
-    // Catálogo de Produtos
-    get_template_part('template-parts/section-product-catalog'); 
-    ?>
-
-    <?php 
-    // Blog Posts
-    get_template_part('template-parts/section-post-blog'); 
-    ?>
-
-    <?php 
-    // Diferenciais Two
-    get_template_part('template-parts/section-differences-two'); 
-    ?>
-
-    <?php 
-    // Endereço e Contato
-    get_template_part('template-parts/section-address'); 
-    ?>
-
-    <?php 
-    // WhatsApp Button
-    get_template_part('template-parts/button-whatsapp'); 
+        foreach ( $sections as $section ) {
+            get_template_part( $section );
+        }
     ?>
 
 </main>

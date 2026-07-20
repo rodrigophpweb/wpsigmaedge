@@ -32,9 +32,8 @@ function sigma_edge_get_difference_items($field_name) {
     if (have_rows($field_name)) {
         while (have_rows($field_name)) {
             the_row();
-            $icon = get_sub_field('icon');
             $items[] = [
-                'icon_id'     => $icon['id'] ?? null,
+                'icon_class'  => sanitize_text_field(get_sub_field('icon_class') ?? ''),
                 'title'       => get_sub_field('title'),
                 'description' => get_sub_field('description'),
             ];

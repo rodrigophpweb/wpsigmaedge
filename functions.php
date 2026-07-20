@@ -17,6 +17,9 @@ require_once get_template_directory() . '/inc/customize.php';
 // Meta Boxes
 require_once get_template_directory() . '/inc/meta-boxes.php';
 
+// Font Awesome Icons (picker do admin)
+require_once get_template_directory() . '/inc/fa-icons.php';
+
 // Template Data Helpers (arquitetura limpa: ACF/WP_Query fora dos template-parts)
 require_once get_template_directory() . '/inc/template-data.php';
 
@@ -235,3 +238,39 @@ function sigma_edge_login_errors() {
     return 'Erro ao fazer login.';
 }
 add_filter('login_errors', 'sigma_edge_login_errors');
+
+// ============================================
+// FONT AWESOME
+// ============================================
+
+function sigma_edge_enqueue_fontawesome() {
+    wp_enqueue_style(
+        'font-awesome',
+        'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css',
+        [],
+        '6.5.2'
+    );
+}
+add_action('wp_enqueue_scripts', 'sigma_edge_enqueue_fontawesome');
+
+function sigma_edge_enqueue_admin_fontawesome() {
+    wp_enqueue_style(
+        'font-awesome',
+        'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css',
+        [],
+        '6.5.2'
+    );
+    wp_enqueue_script(
+        'sigma-edge-fa-picker',
+        get_template_directory_uri() . '/assets/js/admin-fa-picker.js',
+        ['jquery', 'acf-input'],
+        '1.0.0',
+        true
+    );
+    wp_localize_script(
+        'sigma-edge-fa-picker',
+        'sigmaFaPickerData',
+        ['icons' => sigma_edge_get_fa_icons()]
+    );
+}
+add_action('acf/input/admin_enqueue_scripts', 'sigma_edge_enqueue_admin_fontawesome');

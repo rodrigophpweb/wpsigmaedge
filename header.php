@@ -84,5 +84,4 @@
             </aside>
         </nav>
 
-        <p class="site-header__ticker">novidades da Sigma Edge</p>
     </header>
