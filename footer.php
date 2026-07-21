@@ -146,6 +146,9 @@
         <?php endif; ?>
     </div>
 </footer>
+
+<?php get_template_part('template-parts/button-whatsapp'); ?>
+
 <?php wp_footer(); ?>
 </body>
 </html>

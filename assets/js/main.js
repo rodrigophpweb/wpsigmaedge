@@ -112,26 +112,48 @@
     }
 
     /* ============================================
-       SERVICES TABS
+       SERVICES TABS (HTMX)
        ============================================ */
 
-    const serviceTabs = document.querySelectorAll('.section-services__tabs button[data-tab]');
-    const servicePanels = document.querySelectorAll('.section-services__grid[role="tabpanel"]');
+    const tablist = document.querySelector('.section-services__tabs [role="tablist"]');
 
-    serviceTabs.forEach(function (tab) {
-        tab.addEventListener('click', function () {
-            const targetId = 'tab-panel-' + tab.getAttribute('data-tab');
+    if (tablist) {
+        // Atualiza aria-selected e aria-labelledby ao clicar em uma aba
+        tablist.addEventListener('click', function (event) {
+            const tab = event.target.closest('[role="tab"]');
+            if (!tab) return;
 
-            serviceTabs.forEach(function (t) {
+            tablist.querySelectorAll('[role="tab"]').forEach(function (t) {
                 t.setAttribute('aria-selected', 'false');
             });
             tab.setAttribute('aria-selected', 'true');
 
-            servicePanels.forEach(function (panel) {
-                panel.toggleAttribute('hidden', panel.id !== targetId);
-            });
+            const grid = document.getElementById('services-grid');
+            if (grid && tab.id) {
+                grid.setAttribute('aria-labelledby', tab.id);
+            }
         });
-    });
+
+        // Navegação por teclado (WAI-ARIA Tabs Pattern)
+        tablist.addEventListener('keydown', function (event) {
+            const tabs = Array.from(tablist.querySelectorAll('[role="tab"]'));
+            const idx  = tabs.indexOf(document.activeElement);
+
+            if (idx === -1) return;
+
+            const map = { ArrowRight: 1, ArrowLeft: -1, Home: null, End: null };
+            if (!(event.key in map)) return;
+
+            event.preventDefault();
+            let next = idx;
+            if (event.key === 'ArrowRight') next = (idx + 1) % tabs.length;
+            if (event.key === 'ArrowLeft')  next = (idx - 1 + tabs.length) % tabs.length;
+            if (event.key === 'Home')       next = 0;
+            if (event.key === 'End')        next = tabs.length - 1;
+
+            tabs[next].focus();
+        });
+    }
 
     /* ============================================
        PRODUCT CAROUSEL
@@ -230,4 +252,23 @@
             }
         });
     });
+
+    /* ============================================
+       SECTION SERVICES — ANIMAÇÃO DE ENTRADA
+       ============================================ */
+
+    const sectionServices = document.querySelector('.section-services');
+
+    if (sectionServices && 'IntersectionObserver' in window) {
+        const servicesObserver = new IntersectionObserver(function (entries) {
+            entries.forEach(function (entry) {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                    servicesObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.15 });
+
+        servicesObserver.observe(sectionServices);
+    }
 })();

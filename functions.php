@@ -274,3 +274,18 @@ function sigma_edge_enqueue_admin_fontawesome() {
     );
 }
 add_action('acf/input/admin_enqueue_scripts', 'sigma_edge_enqueue_admin_fontawesome');
+
+// ============================================
+// HTMX
+// ============================================
+
+function sigma_edge_enqueue_htmx() {
+    wp_enqueue_script(
+        'htmx',
+        'https://unpkg.com/htmx.org@2.0.4/dist/htmx.min.js',
+        [],
+        '2.0.4',
+        true
+    );
+}
+add_action('wp_enqueue_scripts', 'sigma_edge_enqueue_htmx');

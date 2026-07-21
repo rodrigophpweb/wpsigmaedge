@@ -17,7 +17,6 @@ get_header(); ?>
             'template-parts/section-post-blog',
             'template-parts/section-differences-two',
             'template-parts/section-address',
-            'template-parts/button-whatsapp',
         ];
 
         foreach ( $sections as $section ) {

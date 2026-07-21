@@ -1,9 +1,15 @@
 <?php
 /**
  * Section Services
+ * Navegação por abas com HTMX — conteúdo carregado via admin-ajax.php.
+ * "Ver tudo" redireciona para /servicos/.
+ * "Cotar agora" abre WhatsApp com mensagem pré-preenchida.
  */
 
-$services = sigma_edge_get_services_data();
+$services  = sigma_edge_get_services_data();
+$ajax_url  = admin_url('admin-ajax.php');
+$page_id   = get_the_ID();
+$first_cat = $services['categories'][0] ?? null;
 ?>
 <section class="section-services">
     <?php if ($services['title']) : ?>
@@ -11,91 +17,48 @@ $services = sigma_edge_get_services_data();
     <?php endif; ?>
 
     <?php if ($services['categories']) : ?>
-        <nav class="section-services__tabs" role="tablist">
-            <ul>
+        <nav class="section-services__tabs" aria-label="Filtrar serviços por categoria">
+            <ul role="tablist">
                 <?php foreach ($services['categories'] as $category) : ?>
                     <li role="presentation">
                         <button
                             role="tab"
                             aria-selected="<?php echo $category['index'] === 0 ? 'true' : 'false'; ?>"
-                            aria-controls="tab-panel-<?php echo esc_attr($category['index']); ?>"
                             id="tab-<?php echo esc_attr($category['index']); ?>"
-                            data-tab="<?php echo esc_attr($category['index']); ?>">
+                            data-tab="<?php echo esc_attr($category['index']); ?>"
+                            hx-get="<?php echo esc_url(add_query_arg(['action' => 'sigma_services_tab', 'category' => $category['index'], 'page_id' => $page_id], $ajax_url)); ?>"
+                            hx-target="#services-grid"
+                            hx-swap="innerHTML"
+                            hx-indicator="#services-loading">
                             <?php echo esc_html($category['name']); ?>
                         </button>
                     </li>
                 <?php endforeach; ?>
-                <li role="presentation">
-                    <button
-                        role="tab"
-                        aria-selected="false"
-                        aria-controls="tab-panel-all"
-                        id="tab-all"
-                        data-tab="all">
+                <li>
+                    <a href="<?php echo esc_url(home_url('/servicos/')); ?>" class="section-services__tab-all">
                         Ver tudo
-                    </button>
+                    </a>
                 </li>
             </ul>
         </nav>
 
-        <?php foreach ($services['categories'] as $category) : ?>
-            <div
-                class="section-services__grid"
-                role="tabpanel"
-                id="tab-panel-<?php echo esc_attr($category['index']); ?>"
-                aria-labelledby="tab-<?php echo esc_attr($category['index']); ?>"
-                <?php echo $category['index'] > 0 ? 'hidden' : ''; ?>>
+        <div
+            id="services-grid"
+            class="section-services__grid"
+            role="tabpanel"
+            aria-labelledby="tab-0"
+            aria-live="polite">
 
-                <?php foreach ($category['services'] as $service) : ?>
-                    <article class="service-card">
-                        <header class="service-card__header">
-                            <?php if ($service['thumbnail_id']) : ?>
-                                <figure class="service-card__image">
-                                    <?php echo wp_get_attachment_image($service['thumbnail_id'], 'service-thumbnail', false, ['loading' => 'lazy', 'alt' => '']); ?>
-                                </figure>
-                            <?php endif; ?>
-                            <h3 class="service-card__title">
-                                <a href="<?php echo esc_url($service['permalink']); ?>"><?php echo esc_html($service['title']); ?></a>
-                            </h3>
-                        </header>
-                        <footer class="service-card__footer">
-                            <p><?php echo esc_html($service['excerpt']); ?></p>
-                            <a href="<?php echo esc_url($service['permalink']); ?>" class="service-card__link">
-                                Cotar agora
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                                    <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z" fill="currentColor"/>
-                                </svg>
-                            </a>
-                        </footer>
-                    </article>
+            <?php if ($first_cat) : ?>
+                <?php foreach ($first_cat['services'] as $service) : ?>
+                    <?php sigma_edge_render_service_card($service); ?>
                 <?php endforeach; ?>
-            </div>
-        <?php endforeach; ?>
-
-        <div class="section-services__grid" role="tabpanel" id="tab-panel-all" aria-labelledby="tab-all" hidden>
-            <?php foreach ($services['categories'] as $category) : foreach ($category['services'] as $service) : ?>
-                <article class="service-card">
-                    <header class="service-card__header">
-                        <?php if ($service['thumbnail_id']) : ?>
-                            <figure class="service-card__image">
-                                <?php echo wp_get_attachment_image($service['thumbnail_id'], 'service-thumbnail', false, ['loading' => 'lazy', 'alt' => '']); ?>
-                            </figure>
-                        <?php endif; ?>
-                        <h3 class="service-card__title">
-                            <a href="<?php echo esc_url($service['permalink']); ?>"><?php echo esc_html($service['title']); ?></a>
-                        </h3>
-                    </header>
-                    <footer class="service-card__footer">
-                        <p><?php echo esc_html($service['excerpt']); ?></p>
-                        <a href="<?php echo esc_url($service['permalink']); ?>" class="service-card__link">
-                            Cotar agora
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                                <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z" fill="currentColor"/>
-                            </svg>
-                        </a>
-                    </footer>
-                </article>
-            <?php endforeach; endforeach; ?>
+            <?php endif; ?>
         </div>
+
+        <div id="services-loading" class="section-services__loading htmx-indicator" aria-hidden="true">
+            <span class="screen-reader-text">Carregando serviços…</span>
+        </div>
+
     <?php endif; ?>
 </section>

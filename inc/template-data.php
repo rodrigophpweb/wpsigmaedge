@@ -75,7 +75,9 @@ function sigma_edge_get_services_data() {
 
             if ($category_services) {
                 foreach ($category_services as $service_post) {
-                    $services[] = sigma_edge_map_post_card($service_post, 15);
+                    $card              = sigma_edge_map_post_card($service_post, 15);
+                    $card['icon_class'] = get_field('service_icon_class', $service_post->ID) ?: 'fa-solid fa-gears';
+                    $services[]        = $card;
                 }
             }
 
@@ -154,6 +156,139 @@ function sigma_edge_get_whatsapp_url() {
 
     return '';
 }
+
+/**
+ * Monta URL do WhatsApp para cotação de um serviço específico.
+ */
+function sigma_edge_get_whatsapp_cotacao_url($service_title) {
+    $base_url = sigma_edge_get_whatsapp_url();
+
+    if (!$base_url) {
+        return '#';
+    }
+
+    $phone = '';
+
+    if (preg_match('#wa\.me/(\d+)#', $base_url, $m)) {
+        $phone = $m[1];
+    } elseif (preg_match('#[?&]phone=(\d+)#', $base_url, $m)) {
+        $phone = $m[1];
+    }
+
+    $message = sprintf(
+        'Olá! Gostaria de solicitar uma cotação para o serviço: *%s*. Poderia me enviar mais informações?',
+        $service_title
+    );
+
+    if ($phone) {
+        return 'https://wa.me/' . $phone . '?text=' . rawurlencode($message);
+    }
+
+    $sep = strpos($base_url, '?') !== false ? '&' : '?';
+    return $base_url . $sep . 'text=' . rawurlencode($message);
+}
+
+/**
+ * Renderiza o HTML de um card de serviço.
+ * Usada tanto no template-part quanto no handler HTMX.
+ */
+function sigma_edge_render_service_card($service) {
+    $whatsapp_url = sigma_edge_get_whatsapp_cotacao_url($service['title']);
+    $icon_class   = $service['icon_class'] ?? 'fa-solid fa-gears';
+    ?>
+    <article class="service-card">
+        <header class="service-card__header">
+            <figure class="service-card__image">
+                <?php if (!empty($service['thumbnail_id'])) : ?>
+                    <?php echo wp_get_attachment_image($service['thumbnail_id'], 'service-thumbnail', false, ['loading' => 'lazy', 'alt' => '']); ?>
+                <?php endif; ?>
+                <span class="service-card__icon-badge" aria-hidden="true">
+                    <i class="<?php echo esc_attr($icon_class); ?>"></i>
+                </span>
+            </figure>
+        </header>
+        <h3 class="service-card__title">
+            <a href="<?php echo esc_url($service['permalink']); ?>">
+                <?php echo esc_html($service['title']); ?>
+            </a>
+        </h3>
+        <div class="degrade">
+            
+            <?php if (!empty($service['excerpt'])) : ?>
+                <p><?php echo esc_html($service['excerpt']); ?></p>
+            <?php endif; ?>
+            <footer class="service-card__footer">
+                
+                <a
+                    href="<?php echo esc_url($whatsapp_url); ?>"
+                    class="service-card__link"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="<?php echo esc_attr(sprintf('Cotar %s via WhatsApp', $service['title'])); ?>">
+                    Cotar agora
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false">
+                        <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z" fill="currentColor"/>
+                    </svg>
+                </a>
+            </footer>
+        </div>
+    </article>
+    <?php
+}
+
+/**
+ * Retorna os serviços de uma categoria específica a partir de um page_id.
+ * Usada pelo handler HTMX (contexto AJAX, sem $post global).
+ */
+function sigma_edge_get_services_for_tab($page_id, $category_index) {
+    $services = [];
+    $idx      = 0;
+
+    if (!have_rows('services_categories', $page_id)) {
+        return $services;
+    }
+
+    while (have_rows('services_categories', $page_id)) {
+        the_row();
+        if ($idx === $category_index) {
+            $category_services = get_sub_field('category_services');
+            if ($category_services) {
+                foreach ($category_services as $service_post) {
+                    $card              = sigma_edge_map_post_card($service_post, 15);
+                    $card['icon_class'] = get_field('service_icon_class', $service_post->ID) ?: 'fa-solid fa-gears';
+                    $services[]        = $card;
+                }
+            }
+            break;
+        }
+        $idx++;
+    }
+
+    return $services;
+}
+
+/**
+ * Handler HTMX: retorna os cards de uma categoria como HTML puro.
+ */
+function sigma_edge_ajax_services_tab() {
+    $category = absint($_GET['category'] ?? 0);
+    $page_id  = absint($_GET['page_id']  ?? 0);
+
+    if (!$page_id || get_post_status($page_id) !== 'publish') {
+        status_header(400);
+        wp_die();
+    }
+
+    $services = sigma_edge_get_services_for_tab($page_id, $category);
+
+    foreach ($services as $service) {
+        sigma_edge_render_service_card($service);
+    }
+
+    wp_die();
+}
+add_action('wp_ajax_sigma_services_tab',        'sigma_edge_ajax_services_tab');
+add_action('wp_ajax_nopriv_sigma_services_tab', 'sigma_edge_ajax_services_tab');
 
 function sigma_edge_get_address_data() {
     return [

@@ -3,215 +3,192 @@
  * CSS Grid + CSS Nesting + Container Query
  */
 
+ 
 .section-services {
     container-type: inline-size;
     container-name: services;
-    
-    padding-block: var(--space-section, 5rem);
-    padding-inline: var(--space-gutter, 1.5rem);
-    background-color: hsl(0 0% 100%);
+    width: 100%;
+    max-inline-size: 90rem;
+    margin-inline: auto;
+    padding-block: 1.5rem;
+    padding-inline: 1.5rem;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto 1fr;
+    margin-block: 2rem;
 
-    &__title {
-        font-size: clamp(1.5rem, 3vw + 1rem, 2rem);
-        font-weight: 700;
-        line-height: 1.3;
-        color: hsl(206 100% 21%);
-        text-align: center;
-        margin-block-end: 3rem;
+    & .section-services__title {
+        grid-column: 1 / -1;
+        font-family: 'Montserrat', sans-serif;
+        font-weight: 600;
+        margin-block: 0;
+        color: #001f65;
     }
 
-    &__tabs {
-        display: grid;
-        place-items: center;
-        margin-block-end: 3rem;
+    & .section-services__tabs {
+        grid-column: 1 / -1;
+        margin-block: 1rem;
 
         & ul {
-            display: flex;
-            gap: 1rem;
-            flex-wrap: wrap;
-            justify-content: center;
             list-style: none;
-            margin: 0;
-            padding: 0;
-        }
-
-        & button {
-            padding-block: 0.75rem;
-            padding-inline: 1.5rem;
-            background-color: transparent;
-            color: hsl(220 11% 29%);
-            font-weight: 600;
-            border: 2px solid hsl(218 26% 89%);
-            border-radius: 0.5rem;
-            cursor: pointer;
-            transition: 
-                background-color 0.3s,
-                color 0.3s,
-                border-color 0.3s;
-
-            &[aria-selected="true"] {
-                background-color: hsl(206 100% 29%);
-                color: hsl(0 0% 100%);
-                border-color: hsl(206 100% 29%);
-            }
-
-            &:hover,
-            &:focus-visible {
-                border-color: hsl(206 100% 29%);
-                color: hsl(206 100% 29%);
-            }
-
-            &:focus-visible {
-                outline: 2px solid currentColor;
-                outline-offset: 2px;
-            }
-        }
-    }
-
-    &__grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
-        gap: 2rem;
-
-        &[hidden] {
-            display: none;
-        }
-    }
-}
-
-/* Service Card */
-.service-card {
-    container-type: inline-size;
-    container-name: card;
-
-    display: grid;
-    grid-template-rows: auto 1fr auto;
-    background-color: hsl(0 0% 100%);
-    border-radius: 0.5rem;
-    overflow: clip;
-    transition:
-        translate 0.3s,
-        box-shadow 0.3s;
-    position: relative;
-
-    &:hover,
-    &:focus-within {
-        translate: 0 -0.25rem;
-        box-shadow: 0 0.625rem 1.875rem hsl(215 100% 12% / 0.15);
-    }
-
-    &__header {
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
-        padding: 1.5rem 1.5rem 0;
-    }
-
-    &__image {
-        inline-size: 100%;
-        block-size: 10rem;
-        background-color: hsl(218 32% 94%);
-        border-radius: 0.5rem;
-        overflow: clip;
-        margin: 0;
-
-        & img {
-            inline-size: 100%;
-            block-size: 100%;
-            object-fit: cover;
-        }
-    }
-
-    &__title {
-        font-size: clamp(1.125rem, 1vw + 1rem, 1.25rem);
-        font-weight: 700;
-        line-height: 1.4;
-        padding-inline: 1.5rem;
-        padding-block-start: 1rem;
-        margin: 0;
-
-        & a {
-            color: hsl(206 100% 21%);
-            text-decoration: none;
-
-            &:hover,
-            &:focus-visible {
-                text-decoration: underline;
-                text-decoration-thickness: 2px;
-                text-underline-offset: 0.25rem;
-            }
-        }
-    }
-
-    &__footer {
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
-        margin-block-start: 1.5rem;
-        padding: 1.5rem;
-        background-color: hsl(207 100% 28%);
-
-        & p {
-            font-size: 0.875rem;
-            line-height: 1.6;
-            color: hsl(0 0% 100% / 0.9);
-            margin: 0;
-        }
-    }
-
-    &__link {
-        align-self: flex-start;
-        display: inline-flex;
-        align-items: center;
-        gap: 0.375rem;
-        padding-block: 0.625rem;
-        padding-inline: 1.25rem;
-        background-color: hsl(0 0% 100%);
-        color: hsl(206 100% 21%);
-        font-size: 0.875rem;
-        font-weight: 700;
-        text-decoration: none;
-        border-radius: 0.5rem;
-        transition: gap 0.3s, background-color 0.3s;
-
-        &:hover,
-        &:focus-visible {
-            gap: 0.5rem;
-            background-color: hsl(215 30% 95%);
-        }
-
-        &:focus-visible {
-            outline: 2px solid hsl(0 0% 100%);
-            outline-offset: 2px;
-        }
-    }
-}
-
-/* Container Query */
-@container services (inline-size < 48rem) {
-    .section-services {
-        padding-block: 2.5rem;
-
-        &__title {
-            margin-block-end: 2rem;
-        }
-
-        &__tabs {
-            margin-block-end: 2rem;
-
-            & ul {
-                flex-direction: column;
-                inline-size: 100%;
-            }
+            padding-inline: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            max-width: max-content;
+            background-color: #d1d1d1;
+            padding: 1rem;
+            border-radius: 1rem;
 
             & button {
-                inline-size: 100%;
+                background-color: transparent;
+                border: none;
+                font-family: 'Montserrat', sans-serif;
+                font-weight: 400;
+                color: #383838;
+                cursor: pointer;
+                padding-block: 0.5rem;
+                padding-inline: 1rem;
+                border-radius: 0.5rem;
+                transition: background-color 0.25s ease, color 0.25s ease;
+
+                &:hover,
+                &[aria-selected="true"] {
+                    background-color: #001f65;
+                    color: #fff;
+                    font-weight: 500;
+                }
+            }
+
+            & a {
+                text-decoration: none;
+                color: #001f65;
+                font-family: 'Montserrat', sans-serif;
+                font-weight: 400;
+                padding-block: 0.5rem;
+                padding-inline: 1rem;
+                border-radius: 0.5rem;
+                transition: background-color 0.25s ease, color 0.25s ease;
+
+                &:hover {
+                    background-color: #001f65;
+                    color: #fff;
+                    font-weight: 500;
+                }
             }
         }
+    }
 
-        &__grid {
-            grid-template-columns: 1fr;
-            gap: 1.5rem;
-        }
+    & .section-services__grid {
+        grid-column: 1 / -1;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1rem;
+    }
+
+    & .section-services__loading {
+        grid-column: 1 / -1;
     }
 }
+
+/* ── Service Card ─────────────────────────────────────────────── */
+.service-card {
+    background-image: url('../../images/card-services.min.svg');
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 3rem 0 0;
+
+    & .service-card__header{
+        padding: 3rem;
+    }
+
+    & .service-card__title {
+        padding-inline: 3rem;
+        font-size: 1.5rem;
+        font-weight: 600;
+        font-family: 'Montserrat', sans-serif;
+
+        & a {
+            text-decoration: none;
+            color: #001b62;
+        }
+    }
+
+   & .degrade {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: linear-gradient(to right, #001b62, #0066a6);
+    border-radius: 0 0 1rem 1rem;
+
+    & p {
+        padding: 3rem 3rem 0;
+        color: #fff;
+        font-family: 'Montserrat', sans-serif;
+        line-height: 1.5;
+    }
+
+    & .service-card__footer {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-end;
+        padding-right: 3rem;
+        margin-top: auto;
+        padding-bottom: 2.5rem;
+
+        & a {
+            text-decoration: none;
+            background-color: #fff;
+            color: #001b62;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 400;
+            padding-block: 0.5rem;
+            padding-inline: 1rem;
+            border-radius: 0.5rem;
+            transition: background-color 0.25s ease, color 0.25s ease;
+
+            &:hover {
+                background-color: #001f65;
+                color: #fff;
+                font-weight: 500;
+            }
+        }
+    }
+   }
+}
+
+/* ── Animação de entrada (scroll-triggered) ───────────────────── */
+@media (prefers-reduced-motion: no-preference) {
+    @keyframes services-fade-up {
+        from {
+            opacity: 0;
+            translate: 0 1.75rem;
+        }
+        to {
+            opacity: 1;
+            translate: 0 0;
+        }
+    }
+
+    .section-services.is-visible .section-services__title {
+        animation: services-fade-up 0.5s ease both;
+    }
+
+    .section-services.is-visible .section-services__tabs {
+        animation: services-fade-up 0.5s 0.12s ease both;
+    }
+
+    .section-services.is-visible .service-card {
+        animation: services-fade-up 0.45s ease both;
+    }
+
+    .section-services.is-visible .service-card:nth-child(2) { animation-delay: 0.1s; }
+    .section-services.is-visible .service-card:nth-child(3) { animation-delay: 0.2s; }
+    .section-services.is-visible .service-card:nth-child(4) { animation-delay: 0.3s; }
+    .section-services.is-visible .service-card:nth-child(5) { animation-delay: 0.4s; }
+    .section-services.is-visible .service-card:nth-child(6) { animation-delay: 0.5s; }
+}
+

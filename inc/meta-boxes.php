@@ -563,5 +563,33 @@ function sigma_edge_register_acf_fields() {
             ],
         ],
     ]);
+
+    // ========================================
+    // SERVICE CPT FIELDS
+    // ========================================
+    acf_add_local_field_group([
+        'key'    => 'group_service_fields',
+        'title'  => 'Informações do Serviço',
+        'fields' => [
+            [
+                'key'          => 'field_service_icon_class',
+                'label'        => 'Ícone (Font Awesome)',
+                'name'         => 'service_icon_class',
+                'type'         => 'text',
+                'instructions' => 'Classe FA do ícone. Ex: <code>fa-solid fa-gears</code>. <a href="https://fontawesome.com/icons" target="_blank">Ver ícones</a>',
+                'required'     => 0,
+                'placeholder'  => 'fa-solid fa-gears',
+            ],
+        ],
+        'location' => [
+            [
+                [
+                    'param'    => 'post_type',
+                    'operator' => '==',
+                    'value'    => 'service',
+                ],
+            ],
+        ],
+    ]);
 }
 add_action('acf/init', 'sigma_edge_register_acf_fields');
