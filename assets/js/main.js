@@ -174,9 +174,9 @@
         };
 
         const updateIndicators = function () {
-            const step = getStep();
-            if (!step) return;
-            const activeIndex = Math.round(carouselTrack.scrollLeft / step);
+            const pageWidth = carouselTrack.clientWidth;
+            if (!pageWidth) return;
+            const activeIndex = Math.round(carouselTrack.scrollLeft / pageWidth);
 
             carouselIndicators.forEach(function (indicator, index) {
                 indicator.setAttribute('aria-selected', String(index === Math.min(activeIndex, carouselIndicators.length - 1)));
@@ -196,7 +196,7 @@
 
         carouselIndicators.forEach(function (indicator, index) {
             indicator.addEventListener('click', function () {
-                carouselTrack.scrollTo({ left: getStep() * index, behavior: 'smooth' });
+                carouselTrack.scrollTo({ left: carouselTrack.clientWidth * index, behavior: 'smooth' });
             });
         });
 

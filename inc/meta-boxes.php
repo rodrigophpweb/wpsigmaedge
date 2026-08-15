@@ -423,11 +423,12 @@ function sigma_edge_register_acf_fields() {
                 'instructions' => 'Status de disponibilidade do produto',
                 'required' => 1,
                 'choices' => [
-                    'available' => 'Disponível',
-                    'unavailable' => 'Indisponível',
-                    'pre_order' => 'Pré-venda',
+                    'available'   => 'Em estoque',
+                    'unavailable' => 'Fora de estoque',
+                    'pre_order'   => 'Pré-venda',
                 ],
                 'default_value' => 'available',
+                'return_format' => 'label',
             ],
             [
                 'key' => 'field_product_technical_sheet',

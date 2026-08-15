@@ -97,19 +97,25 @@ function sigma_edge_get_services_data() {
 }
 
 function sigma_edge_get_catalog_data() {
-    $products = get_field('catalog_products');
+    $query = new WP_Query([
+        'post_type'      => 'product',
+        'posts_per_page' => 12,
+        'post_status'    => 'publish',
+        'orderby'        => 'date',
+        'order'          => 'DESC',
+        'no_found_rows'  => true,
+    ]);
+
     $items = [];
 
-    if ($products) {
-        foreach ($products as $product_post) {
-            $item = sigma_edge_map_post_card($product_post, 12);
-            $item['availability'] = get_field('product_availability', $product_post->ID);
-            $items[] = $item;
-        }
+    foreach ($query->posts as $product_post) {
+        $item                 = sigma_edge_map_post_card($product_post, 12);
+        $item['availability'] = get_field('product_availability', $product_post->ID);
+        $items[]              = $item;
     }
 
     return [
-        'title'    => get_field('catalog_title'),
+        'title'    => get_field('catalog_title') ?: 'Conheça nosso catálogo de peças',
         'products' => $items,
     ];
 }

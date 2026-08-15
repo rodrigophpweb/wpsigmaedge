@@ -14,13 +14,20 @@ $catalog = sigma_edge_get_catalog_data();
         <button
             class="product-carousel__control product-carousel__control--prev"
             aria-label="Produto anterior">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                <path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6 1.41-1.41z" fill="currentColor"/>
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <polyline points="15 18 9 12 15 6"/>
             </svg>
         </button>
 
         <div class="product-carousel__track">
-            <?php foreach ($catalog['products'] as $product) : ?>
+            <?php
+            $whatsapp_base = sigma_edge_get_whatsapp_url();
+            foreach ($catalog['products'] as $product) :
+                $cta_message = 'Olá! Gostaria de cotar o produto: ' . $product['title'];
+                $cta_href = $whatsapp_base
+                    ? add_query_arg('text', $cta_message, $whatsapp_base)
+                    : $product['permalink'];
+            ?>
                 <article class="product-card">
                     <header class="product-card__header">
                         <figure class="product-card__image">
@@ -31,9 +38,9 @@ $catalog = sigma_edge_get_catalog_data();
                                     <path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z" fill="currentColor"/>
                                 </svg>
                             <?php endif; ?>
-                            <figcaption class="product-card__badge" aria-label="Produto certificado">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                                    <path d="M12 2L4 5v6.09c0 5.05 3.41 9.76 8 10.91 4.59-1.15 8-5.86 8-10.91V5l-8-3z" fill="currentColor"/>
+                            <figcaption class="product-card__badge" aria-label="Ferramenta">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                                    <path d="M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.6 4.6C.4 7 .9 10 2.9 12c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.5-.4.5-1.1.1-1.4z" fill="currentColor"/>
                                 </svg>
                             </figcaption>
                         </figure>
@@ -41,17 +48,17 @@ $catalog = sigma_edge_get_catalog_data();
 
                     <footer class="product-card__footer">
                         <?php if ($product['availability']) : ?>
-                            <mark class="product-card__status"><?php echo esc_html($product['availability']); ?></mark>
+                            <span class="product-card__status"><?php echo esc_html($product['availability']); ?></span>
                         <?php endif; ?>
                         <h3 class="product-card__title">
                             <a href="<?php echo esc_url($product['permalink']); ?>"><?php echo esc_html($product['title']); ?></a>
                         </h3>
                         <p class="product-card__description"><?php echo esc_html($product['excerpt']); ?></p>
-                        <a href="<?php echo esc_url($product['permalink']); ?>" class="product-card__link">
+                        <hr class="product-card__divider">
+                        <a href="<?php echo esc_url($cta_href); ?>"
+                           class="product-card__cta"
+                           <?php if ($whatsapp_base) : ?>target="_blank" rel="noopener noreferrer"<?php endif; ?>>
                             Cotar
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                                <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z" fill="currentColor"/>
-                            </svg>
                         </a>
                     </footer>
                 </article>
@@ -61,15 +68,23 @@ $catalog = sigma_edge_get_catalog_data();
         <button
             class="product-carousel__control product-carousel__control--next"
             aria-label="Próximo produto">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z" fill="currentColor"/>
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <polyline points="9 18 15 12 9 6"/>
             </svg>
         </button>
     </div>
 
+    <?php
+    $cards_per_page = 4;
+    $page_count = max(1, (int) ceil(count($catalog['products']) / $cards_per_page));
+    ?>
     <div class="product-carousel__indicators" role="tablist" aria-label="Indicadores de navegação">
-        <button role="tab" aria-label="Slide 1" aria-selected="true"></button>
-        <button role="tab" aria-label="Slide 2" aria-selected="false"></button>
-        <button role="tab" aria-label="Slide 3" aria-selected="false"></button>
+        <?php for ($i = 1; $i <= $page_count; $i++) : ?>
+            <button
+                role="tab"
+                aria-label="Página <?php echo $i; ?> de <?php echo $page_count; ?>"
+                aria-selected="<?php echo $i === 1 ? 'true' : 'false'; ?>">
+            </button>
+        <?php endfor; ?>
     </div>
 </section>
